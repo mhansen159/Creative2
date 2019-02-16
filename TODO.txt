@@ -1,2 +1,0 @@
-Edit .js file. continue with 2nd tutorial which is fetch and display (back on current tutorial).
-Continue at Weather Forecast.
