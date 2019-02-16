@@ -1,47 +1,30 @@
-document.getElementById("weatherSubmit").addEventListener("click", function(event) {
+document.getElementById("pokemonSubmit").addEventListener("click", function(event) {
   event.preventDefault();
-  const value = document.getElementById("weatherInput").value;
+  const value = document.getElementById("pokemonInput").value;
   if (value === "")
     return;
   console.log(value);
 
 
-const url = "http://api.openweathermap.org/data/2.5/weather?q=" + value + ",US&units=imperial" + "&APPID=3c5df56b882056da253a2dc016079148";
-  fetch(url)
+const url = "http://pokeapi.co/api/v2/pokemon/" + value;
+  fetch(url, {mode: 'cors'})
     .then(function(response) {
       return response.json();
     }).then(function(json) {	
-      
+      console.log(json); 
+    
       let results = "";
-      results += 'Current Weather in ' + json.name;
-      results += ": Wind: " + json.wind.deg + "&deg; with speed of " + json.wind.speed;
-      results += ', Temperature: ' + json.main.temp + " &deg;F with a "
-      for (let i=0; i < json.weather.length; i++) {
-	results += json.weather[i].description
-	if (i !== json.weather.length - 1)
-	  results += ", "
-      }
-      for (let i=0; i < json.weather.length; i++) {
-	results += '<br><img src="http://openweathermap.org/img/w/' + json.weather[i].icon + '.png"/>';
-      }
+      results += "<div>" + json.species.name + "<br><img src=\"" + json.sprites.front_default + "\"/><img src=\"" + json.sprites.front_shiny + "\"/>";
+      results += "<br>ID: " + json.id + "<br>Height: " + json.height + "<br>Weight: " + json.weight;
 
-      document.getElementById("weatherResults").innerHTML = results;
-    });
-
-
-const url2 = "http://api.openweathermap.org/data/2.5/forecast?q=" + value + ", US&units=imperial" + "&APPID=3c5df56b882056da253a2dc016079148";
-  fetch(url2)
-    .then(function(response) {
-      return response.json();
-    }).then(function(json) {
-      let forecast = "";
-      for (let i=0; i < json.list.length; i++) {
-	forecast += "<div class=\"content\">" + moment(json.list[i].dt_txt).format('MMMM Do YYYY, h:mm:ss a<br>');
-	
-        forecast += "Wind: " + json.list[i].wind.deg + "&deg; with speed of " + json.list[i].wind.speed;
-	forecast += "<br>Temperature: " + json.list[i].main.temp + "&deg;";
-	forecast += '<br><img src="http://openweathermap.org/img/w/' + json.list[i].weather[0].icon + '.png"/></div>'
+      results += "<br>Types: ";
+      for (let i=0; i < json.types.length; i++) {
+	results += json.types[i].type.name;
+	if (i !== json.types.length - 1)
+	  results += ", ";
       }
-      document.getElementById("forecastResults").innerHTML = forecast;
+      results += "</div>";
+
+      document.getElementById("pokemonResults").innerHTML = results;
     });
 });
